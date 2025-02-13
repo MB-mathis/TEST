@@ -79,7 +79,7 @@ $conn->close();
     <title>Créer un compte</title>
 </head>
 <body>
-    <h2>Formulaire de création de compte</h2>
+    <h2>Formulaire de création de compte </h2>
     <!-- Afficher le message de résultat -->
     <p><?php echo $message; ?></p>
 
