@@ -12,6 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $check_email = $conn->prepare("SELECT id FROM users WHERE email = ?");
     $check_email->bind_param("s", $email);
     $check_email->execute();
+    $check_email->store_result();
 
     if ($check_email->num_rows > 0) {
         $message = "⚠️ Cet email est déjà utilisé.";
@@ -28,9 +29,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $message = "Erreur lors de la création du compte.";
             }
+            $stmt->close();
         }
     }
 }
+$conn->close();
 ?>
 
 <!DOCTYPE html>

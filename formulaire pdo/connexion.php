@@ -20,9 +20,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: accueil.php");
             exit();
         } else {
-            $message = "mot de passe ou email incorrect ";
+            $message = "❌ Mot de passe incorrect.";
         }
-    } 
+    } else {
+        $message = "❌ Aucun compte trouvé avec cet email.";
+    }
 }
 ?>
 

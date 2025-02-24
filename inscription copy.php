@@ -1,5 +1,5 @@
 <?php
-require_once "configbdd.php"; // Inclusion de la connexion à la base de données
+require_once "configbdd-pdo.php"; // Inclusion de la connexion à la base de données
 
 $message = "";
 
@@ -9,18 +9,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
 
     // Vérifier si l'email existe déjà
-    $check_email = $conn->prepare("SELECT id FROM users WHERE email = ?");
-    $check_email->bind_param("s", $email);
+    $check_email = $conn->prepare("SELECT id FROM users WHERE email = :email");
+    $check_email->bindParam(":email", $email, PDO::PARAM_STR);
     $check_email->execute();
 
-    if ($check_email->num_rows > 0) {
-        $message = "⚠️ Cet email est déjà utilisé.";
+    if ($check_email->rowCount() > 0) {
+        $message = "adresse mail indisponible ";
     } else {
         $hashed_pass = password_hash($pass, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO users (username, password, email) VALUES (:username, :password, :email)";
 
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("sss", $user, $hashed_pass, $email);
+            $stmt->bindParam(":username", $user, PDO::PARAM_STR);
+            $stmt->bindParam(":password", $hashed_pass, PDO::PARAM_STR);
+            $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+            
             if ($stmt->execute()) {
                 $message = "Compte créé avec succès !";
                 header("Location: connexion.php?success=1");
